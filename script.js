@@ -16,8 +16,14 @@ function checkPDF() {
     fileReader.readAsArrayBuffer(file);
 }
 function checkForXrefErrors(arrayBuffer) {
+    const src = {
+        data: arrayBuffer,
+        verbosity: 5,
+        stopAtErrors: true,
+        pdfBug: true,
+      };
     // Load the PDF using pdf.js
-    pdfjsLib.getDocument({ data: arrayBuffer }).promise.then(function (pdf) {
+    pdfjsLib.getDocument(src).promise.then(function (pdf) {
         // PDF loaded successfully, check for potential Xref errors
         const numPages = pdf.numPages;
         let xrefErrors = false;
@@ -25,7 +31,8 @@ function checkForXrefErrors(arrayBuffer) {
             pdf.getPage(pageNum).then(function (page) {
                 // Attempting to extract the text from each page.
                 // If the page has a corrupted Xref, this might throw an error.
-                page.getTextContent().then(function () { }).catch(function () {
+                page.getTextContent().then(function () { }).catch(function (error) {
+                    console.error(error);
                     xrefErrors = true;
                     displayResult('The PDF may have Xref errors.');
                 });
