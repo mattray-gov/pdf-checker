@@ -1,5 +1,5 @@
-const pdfjsLib = window['pdfjs-dist/build/pdf'];
-
+//const pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 function checkPDF() {
     const fileInput = document.getElementById('pdfFileInput');
     const file = fileInput.files[0];
