@@ -1,4 +1,4 @@
-//const pdfjsLib = window['pdfjs-dist/build/pdf'];
+var PDFDocument = PDFLib.PDFDocument;
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 function checkPDF() {
     const fileInput = document.getElementById('pdfFileInput');
@@ -15,7 +15,9 @@ function checkPDF() {
     };
     fileReader.readAsArrayBuffer(file);
 }
-function checkForXrefErrors(arrayBuffer) {
+async function checkForXrefErrors(arrayBuffer) {
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    console.log(pdfDoc);
     const src = {
         data: arrayBuffer,
         verbosity: 5,
@@ -24,6 +26,7 @@ function checkForXrefErrors(arrayBuffer) {
       };
     // Load the PDF using pdf.js
     pdfjsLib.getDocument(src).promise.then(function (pdf) {
+        //console.log(pdf);
         // PDF loaded successfully, check for potential Xref errors
         const numPages = pdf.numPages;
         let xrefErrors = false;
